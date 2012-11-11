@@ -1,4 +1,1 @@
-trident-redis
-=============
-
-Trident state implementation for Redis
+This library implements a Trident state on top of Redis. It supports non-transactional, transactional, and opaque state types.
