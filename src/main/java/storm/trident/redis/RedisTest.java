@@ -1,14 +1,8 @@
 package storm.trident.redis;
 
-import backtype.storm.Config;
-import backtype.storm.LocalCluster;
-import backtype.storm.LocalDRPC;
-import backtype.storm.generated.StormTopology;
-import backtype.storm.tuple.Fields;
-import backtype.storm.tuple.Values;
-import backtype.storm.utils.Utils;
 import java.net.InetSocketAddress;
-import java.util.Arrays;
+
+import redis.clients.jedis.exceptions.JedisConnectionException;
 import storm.trident.TridentState;
 import storm.trident.TridentTopology;
 import storm.trident.operation.BaseFunction;
@@ -20,6 +14,13 @@ import storm.trident.operation.builtin.Sum;
 import storm.trident.state.StateFactory;
 import storm.trident.testing.FixedBatchSpout;
 import storm.trident.tuple.TridentTuple;
+import backtype.storm.Config;
+import backtype.storm.LocalCluster;
+import backtype.storm.LocalDRPC;
+import backtype.storm.generated.StormTopology;
+import backtype.storm.tuple.Fields;
+import backtype.storm.tuple.Values;
+import backtype.storm.utils.Utils;
 
 public class RedisTest {
 
@@ -61,8 +62,7 @@ public class RedisTest {
 	}
 
 	public static void main(String[] args) {
-		int PORT = 10001;
-		StateFactory redis = RedisState.nonTransactional(new InetSocketAddress("localhost", PORT));
+		StateFactory redis = RedisState.nonTransactional(new InetSocketAddress("localhost", 6379));
 
 		LocalDRPC drpc = new LocalDRPC();
 		StormTopology topology = buildTopology(drpc, redis);
@@ -70,9 +70,14 @@ public class RedisTest {
 		LocalCluster cluster = new LocalCluster();
 		cluster.submitTopology("tester", conf, topology);
 
-		for (int i = 0; i < 100; i++) {
-			System.out.println("DRPC: " + drpc.execute("words", "cat the man four"));
-			Utils.sleep(1000);
+		try {
+			for (int i = 0; i < 100; i++) {
+				System.out.println("DRPC: " + drpc.execute("words", "cat the man four"));
+				Utils.sleep(1000);
+			}
+			
+		} catch (JedisConnectionException e) {
+			new RuntimeException("Unfortunately, this test requires redis-server runing on localhost:6379", e);
 		}
 
 	}
