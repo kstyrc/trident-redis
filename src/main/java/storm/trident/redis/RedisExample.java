@@ -77,7 +77,7 @@ public class RedisExample {
 			}
 			
 		} catch (JedisConnectionException e) {
-			new RuntimeException("Unfortunately, this test requires redis-server runing on localhost:6379", e);
+			throw new RuntimeException("Unfortunately, this test requires redis-server runing on localhost:6379", e);
 		}
 
 	}
