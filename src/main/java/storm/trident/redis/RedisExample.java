@@ -22,7 +22,7 @@ import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Values;
 import backtype.storm.utils.Utils;
 
-public class RedisTest {
+public class RedisExample {
 
 	public static class Split extends BaseFunction {
 		@Override
