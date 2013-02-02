@@ -27,6 +27,7 @@ import storm.trident.state.map.NonTransactionalMap;
 import storm.trident.state.map.OpaqueMap;
 import storm.trident.state.map.SnapshottableMap;
 import storm.trident.state.map.TransactionalMap;
+import backtype.storm.task.IMetricsContext;
 import backtype.storm.tuple.Values;
 
 public class RedisState<T> implements IBackingMap<T> {
@@ -122,7 +123,7 @@ public class RedisState<T> implements IBackingMap<T> {
 		}
 
 		@Override
-		public State makeState(Map conf, int partitionIndex, int numPartitions) {
+		public State makeState(@SuppressWarnings("rawtypes") Map conf, IMetricsContext metrics, int partitionIndex, int numPartitions) {
 			JedisPool pool = new JedisPool(new JedisPoolConfig(), 
 					server.getHostName(), server.getPort(), options.connectionTimeout, options.password, options.database);
 			RedisState state = new RedisState(pool, options, serializer, factory);

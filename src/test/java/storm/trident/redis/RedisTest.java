@@ -29,7 +29,7 @@ public class RedisTest extends TestCase {
 	public void testCache() {
 		try {
 			StateFactory redis = RedisState.nonTransactional(new InetSocketAddress(HOSTNAME, PORT));
-			MapState state = (MapState) redis.makeState(new HashMap(), 0, 0);
+			MapState state = (MapState) redis.makeState(new HashMap(), null, 0, 0);
 	
 			// insert some key-value pairs
 			String[] keys = new String[]{"foo", "bar", "baz"};
