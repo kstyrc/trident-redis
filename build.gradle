@@ -5,6 +5,7 @@ apply plugin: 'eclipse'
 sourceCompatibility = 1.6
 targetCompatibility = 1.6
 
+group = 'storm.trident.redis'
 version = '1.0'
 
 repositories {
