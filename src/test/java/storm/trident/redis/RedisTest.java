@@ -1,31 +1,47 @@
 package storm.trident.redis;
 
+import static org.junit.Assert.assertEquals;
+
 import java.net.InetSocketAddress;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.exceptions.JedisConnectionException;
 import storm.trident.state.StateFactory;
 import storm.trident.state.map.MapState;
 
 import com.google.common.collect.Lists;
+import com.google.common.io.Resources;
 
-public class RedisTest extends TestCase {
+public class RedisTest {
 	private static final long SEED = 8682522807148012L;
 	private static final Random RANDOM = new Random(SEED);
 	
 	private static final String HOSTNAME = "localhost";
 	private static final int PORT = 6379;
 	
-	@Override
-	public void setUp() {
+	private static RedisServerRunner redisRunner;
+	
+	@BeforeClass
+	public static void init() throws Exception {
+		redisRunner = new RedisServerRunner(Resources.getResource("redis-server").getPath(), HOSTNAME, PORT);
+		redisRunner.start();
+	}
+	
+	@Before
+	public void setup() {
 		cleanup();
 	}
 
-	// Unfortunately, this test requires redis-server running on localhost:6379
+	@Test
 	public void testCache() {
 		try {
 			StateFactory redis = RedisState.nonTransactional(new InetSocketAddress(HOSTNAME, PORT));
@@ -51,13 +67,18 @@ public class RedisTest extends TestCase {
 			}
 		
 		} catch (JedisConnectionException e) {
-			throw new RuntimeException("Unfortunately, this test requires redis-server runing on localhost:6379", e);
+			throw new RuntimeException(String.format("Unfortunately, Jedis is unable to connect to redis server [%s:%i]", HOSTNAME, PORT), e);
 		}
 	}
 	
-	@Override
+	@After
 	public void tearDown() {
 		cleanup();
+	}
+	
+	@AfterClass
+	public static void shutdown() {
+		redisRunner.stop();
 	}
 	
 	private void cleanup() {
@@ -67,7 +88,7 @@ public class RedisTest extends TestCase {
 			jedis.disconnect();
 			
 		} catch (JedisConnectionException e) {
-			throw new RuntimeException("Unfortunately, this test requires redis-server runing on localhost:6379", e);
+			throw new RuntimeException(String.format("Unfortunately, Jedis is unable to connect to redis server [%s:%i]", HOSTNAME, PORT), e);
 		}
 	}
 }
