@@ -15,6 +15,7 @@ import org.junit.Test;
 
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.exceptions.JedisConnectionException;
+import redis.embedded.RedisServer;
 import storm.trident.state.StateFactory;
 import storm.trident.state.map.MapState;
 
@@ -28,19 +29,16 @@ public class RedisTest {
 	private static final String HOSTNAME = "localhost";
 	private static final int PORT = 6379;
 	
-	private static RedisServerRunner redisRunner;
-	
-	@BeforeClass
-	public static void init() throws Exception {
-		redisRunner = new RedisServerRunner(Resources.getResource("redis-server").getPath(), HOSTNAME, PORT);
-		redisRunner.start();
-	}
+	private RedisServer redisServer;
+
 	
 	@Before
-	public void setup() {
-		cleanup();
+	public void setup() throws Exception {
+        redisServer = new RedisServer(PORT);
+        redisServer.start();
+        cleanup();
 	}
-
+	
 	@Test
 	public void testCache() {
 		try {
@@ -74,11 +72,7 @@ public class RedisTest {
 	@After
 	public void tearDown() {
 		cleanup();
-	}
-	
-	@AfterClass
-	public static void shutdown() {
-		redisRunner.stop();
+        redisServer.stop();
 	}
 	
 	private void cleanup() {
