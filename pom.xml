@@ -5,7 +5,7 @@
     <groupId>storm.trident.redis</groupId>
     <artifactId>trident-redis</artifactId>
     <packaging>jar</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.2-SNAPSHOT</version>
     <name>trident-redis</name>
     <description>Trident state implementation for Redis using Jedis client</description>
     <url>https://github.com/kstyrc/trident-redis</url>
@@ -45,12 +45,19 @@
         </repository>
     </distributionManagement>
 
+    <repositories>
+        <repository>
+            <id>clojars</id>
+            <url>http://clojars.org/repo/</url>
+        </repository>
+    </repositories>
+
     <dependencies>
 
         <dependency>
             <groupId>storm</groupId>
             <artifactId>storm</artifactId>
-            <version>0.8.2</version>
+            <version>0.9.0-rc2</version>
             <scope>compile</scope>
         </dependency>
 
