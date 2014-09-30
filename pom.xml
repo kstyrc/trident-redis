@@ -58,7 +58,7 @@
             <groupId>storm</groupId>
             <artifactId>storm</artifactId>
             <version>0.9.0-rc2</version>
-            <scope>compile</scope>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
