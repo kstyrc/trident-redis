@@ -99,7 +99,11 @@ public class RedisTest {
    @After
    public void tearDown() {
       cleanup();
-      redisServer.stop();
+       try {
+           redisServer.stop();
+       } catch (InterruptedException e) {
+           e.printStackTrace();
+       }
    }
 
    private void cleanup() {
