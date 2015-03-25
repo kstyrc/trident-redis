@@ -206,7 +206,7 @@ public class RedisState<T> implements IBackingMap<T> {
       for (List<Object> key : keys) {
          String strKey = keyFactory.build(key);
          byte[] bytes = keyValue.get(strKey.getBytes());
-         values.add(new String(bytes));
+         values.add(bytes == null ? null : new String(bytes));
       }
       return values;
    }
